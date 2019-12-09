@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 export default function Index() {
     const classes = useStyles();
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(2);
     const [logged, setLogged] = useState(false);
 
     const HeaderLinks = () => {
@@ -49,9 +49,21 @@ export default function Index() {
 
     const Page = () => {
         if (page == 1) {
-            return <SignUp />;
+            return (
+                <SignUp
+                    onChange={p => {
+                        setPage(p);
+                    }}
+                />
+            );
         } else if (page == 2) {
-            return <SignIn />;
+            return (
+                <SignIn
+                    onChange={p => {
+                        setPage(p);
+                    }}
+                />
+            );
         } else {
             return <Convert />;
         }

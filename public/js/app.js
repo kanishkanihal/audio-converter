@@ -77112,7 +77112,7 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_3__["ma
 function Index() {
   var classes = useStyles();
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(1),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(2),
       _useState2 = _slicedToArray(_useState, 2),
       page = _useState2[0],
       setPage = _useState2[1];
@@ -77144,9 +77144,17 @@ function Index() {
 
   var Page = function Page() {
     if (page == 1) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignUp__WEBPACK_IMPORTED_MODULE_8__["default"], null);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignUp__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        onChange: function onChange(p) {
+          setPage(p);
+        }
+      });
     } else if (page == 2) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignIn__WEBPACK_IMPORTED_MODULE_7__["default"], null);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignIn__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        onChange: function onChange(p) {
+          setPage(p);
+        }
+      });
     } else {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Convert__WEBPACK_IMPORTED_MODULE_9__["default"], null);
     }
@@ -77242,7 +77250,7 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_12__["m
     }
   };
 });
-function SignIn() {
+function SignIn(props) {
   var classes = useStyles();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
@@ -77257,6 +77265,7 @@ function SignIn() {
 
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
+    props.onChange(0);
     console.log(email, password);
   };
 
@@ -77387,7 +77396,7 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_12__["m
     }
   };
 });
-function SignUp() {
+function SignUp(props) {
   var classes = useStyles();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
@@ -77412,6 +77421,7 @@ function SignUp() {
 
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
+    props.onChange(2);
     console.log(firstName, lastName, email, password);
   };
 

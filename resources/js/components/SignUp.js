@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function SignUp() {
+export default function SignUp(props) {
     const classes = useStyles();
 
     const [firstName, setFirstName] = useState();
@@ -44,6 +44,7 @@ export default function SignUp() {
 
     const handleSubmit = e => {
         e.preventDefault();
+        props.onChange(2);
         console.log(firstName, lastName, email, password);
     };
 

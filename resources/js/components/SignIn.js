@@ -34,13 +34,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
     const classes = useStyles();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
     const handleSubmit = e => {
         e.preventDefault();
+        props.onChange(0);
         console.log(email, password);
     };
 

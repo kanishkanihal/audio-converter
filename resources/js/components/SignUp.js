@@ -69,7 +69,6 @@ export default function SignUp(props) {
                 alert(error.message);
             });
         //Save the user - End
-        //props.onChange(2);
         console.log(name, email, password);
     };
 

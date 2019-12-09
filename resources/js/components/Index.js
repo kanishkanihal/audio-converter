@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -73,7 +73,27 @@ export default function Index() {
             return <Convert />;
         }
     };
-
+    useEffect(() => {
+        //Get user information
+        let token = localStorage.getItem("converter_token");
+        if (token !== undefined) {
+            axios
+                .get("/api/auth/user", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .then(function(response) {
+                    // handle success
+                    setLogged(true);
+                    setPage(0);
+                })
+                .catch(function(error) {});
+        } else {
+        }
+    });
     return (
         <div className={classes.root}>
             <div className="container">

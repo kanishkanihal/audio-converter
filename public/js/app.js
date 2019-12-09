@@ -77164,6 +77164,24 @@ function Index() {
     }
   };
 
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    //Get user information
+    var token = localStorage.getItem("converter_token");
+
+    if (token !== undefined) {
+      axios.get("/api/auth/user", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: "Bearer ".concat(token)
+        }
+      }).then(function (response) {
+        // handle success
+        setLogged(true);
+        setPage(0);
+      })["catch"](function (error) {});
+    } else {}
+  });
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: classes.root
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

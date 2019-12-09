@@ -53,6 +53,7 @@ export default function Index() {
                 <SignUp
                     onChange={p => {
                         setPage(p);
+                        //
                     }}
                 />
             );
@@ -61,6 +62,10 @@ export default function Index() {
                 <SignIn
                     onChange={p => {
                         setPage(p);
+                        //If p == 0 mean, login success
+                        if (p == 0) {
+                            setLogged(true);
+                        }
                     }}
                 />
             );

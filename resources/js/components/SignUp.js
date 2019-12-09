@@ -14,6 +14,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Copyright from "./lib/Copyright";
 
+import axios from "axios";
+
 const useStyles = makeStyles(theme => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -37,15 +39,38 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp(props) {
     const classes = useStyles();
 
-    const [firstName, setFirstName] = useState();
-    const [lastName, setLastName] = useState();
+    const [name, setName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
     const handleSubmit = e => {
         e.preventDefault();
-        props.onChange(2);
-        console.log(firstName, lastName, email, password);
+        //Save the user - Start
+        axios
+            .post(
+                "/api/auth/signup",
+                {
+                    name: name,
+                    email: email,
+                    password: password
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }
+            )
+            .then(function(response) {
+                alert(response.data.message);
+                props.onChange(2);
+            })
+            .catch(function(error) {
+                alert(error.message);
+            });
+        //Save the user - End
+        //props.onChange(2);
+        console.log(name, email, password);
     };
 
     return (
@@ -60,33 +85,19 @@ export default function SignUp(props) {
                 </Typography>
                 <form className={classes.form} onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12}>
                             <TextField
-                                autoComplete="fname"
-                                name="firstName"
+                                autoComplete="name"
+                                name="name"
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="firstName"
-                                label="First Name"
+                                id="name"
+                                label="Name"
                                 onChange={e => {
-                                    setFirstName(e.target.value);
+                                    setName(e.target.value);
                                 }}
                                 autoFocus
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="lname"
-                                onChange={e => {
-                                    setLastName(e.target.value);
-                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>

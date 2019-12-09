@@ -77146,13 +77146,17 @@ function Index() {
     if (page == 1) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignUp__WEBPACK_IMPORTED_MODULE_8__["default"], {
         onChange: function onChange(p) {
-          setPage(p);
+          setPage(p); //
         }
       });
     } else if (page == 2) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignIn__WEBPACK_IMPORTED_MODULE_7__["default"], {
         onChange: function onChange(p) {
-          setPage(p);
+          setPage(p); //If p == 0 mean, login success
+
+          if (p == 0) {
+            setLogged(true);
+          }
         }
       });
     } else {
@@ -77264,8 +77268,23 @@ function SignIn(props) {
       setPassword = _useState4[1];
 
   var handleSubmit = function handleSubmit(e) {
-    e.preventDefault();
-    props.onChange(0);
+    e.preventDefault(); //Save the user - Start
+
+    axios.post("/api/auth/login", {
+      email: email,
+      password: password
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    }).then(function (response) {
+      localStorage.setItem("converter_token", response.data.access_token);
+      props.onChange(0);
+    })["catch"](function (error) {
+      alert("invalid credentials");
+    }); //Save the user - End
+
     console.log(email, password);
   };
 
@@ -77351,6 +77370,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
 /* harmony import */ var _material_ui_core_Container__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/core/Container */ "./node_modules/@material-ui/core/esm/Container/index.js");
 /* harmony import */ var _lib_Copyright__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./lib/Copyright */ "./resources/js/components/lib/Copyright.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_15__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -77358,6 +77379,7 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -77401,28 +77423,40 @@ function SignUp(props) {
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
       _useState2 = _slicedToArray(_useState, 2),
-      firstName = _useState2[0],
-      setFirstName = _useState2[1];
+      name = _useState2[0],
+      setName = _useState2[1];
 
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
       _useState4 = _slicedToArray(_useState3, 2),
-      lastName = _useState4[0],
-      setLastName = _useState4[1];
+      email = _useState4[0],
+      setEmail = _useState4[1];
 
   var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
       _useState6 = _slicedToArray(_useState5, 2),
-      email = _useState6[0],
-      setEmail = _useState6[1];
-
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
-      _useState8 = _slicedToArray(_useState7, 2),
-      password = _useState8[0],
-      setPassword = _useState8[1];
+      password = _useState6[0],
+      setPassword = _useState6[1];
 
   var handleSubmit = function handleSubmit(e) {
-    e.preventDefault();
-    props.onChange(2);
-    console.log(firstName, lastName, email, password);
+    e.preventDefault(); //Save the user - Start
+
+    axios__WEBPACK_IMPORTED_MODULE_15___default.a.post("/api/auth/signup", {
+      name: name,
+      email: email,
+      password: password
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    }).then(function (response) {
+      alert(response.data.message);
+      props.onChange(2);
+    })["catch"](function (error) {
+      alert(error.message);
+    }); //Save the user - End
+    //props.onChange(2);
+
+    console.log(name, email, password);
   };
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Container__WEBPACK_IMPORTED_MODULE_13__["default"], {
@@ -77443,35 +77477,19 @@ function SignUp(props) {
     spacing: 2
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_8__["default"], {
     item: true,
-    xs: 12,
-    sm: 6
+    xs: 12
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    autoComplete: "fname",
-    name: "firstName",
+    autoComplete: "name",
+    name: "name",
     variant: "outlined",
     required: true,
     fullWidth: true,
-    id: "firstName",
-    label: "First Name",
+    id: "name",
+    label: "Name",
     onChange: function onChange(e) {
-      setFirstName(e.target.value);
+      setName(e.target.value);
     },
     autoFocus: true
-  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_8__["default"], {
-    item: true,
-    xs: 12,
-    sm: 6
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    variant: "outlined",
-    required: true,
-    fullWidth: true,
-    id: "lastName",
-    label: "Last Name",
-    name: "lastName",
-    autoComplete: "lname",
-    onChange: function onChange(e) {
-      setLastName(e.target.value);
-    }
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_8__["default"], {
     item: true,
     xs: 12

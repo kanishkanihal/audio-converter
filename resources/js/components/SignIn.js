@@ -41,7 +41,33 @@ export default function SignIn(props) {
 
     const handleSubmit = e => {
         e.preventDefault();
-        props.onChange(0);
+        //Save the user - Start
+        axios
+            .post(
+                "/api/auth/login",
+                {
+                    email: email,
+                    password: password
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }
+            )
+            .then(function(response) {
+                localStorage.setItem(
+                    "converter_token",
+                    response.data.access_token
+                );
+                props.onChange(0);
+            })
+            .catch(function(error) {
+                alert("invalid credentials");
+            });
+        //Save the user - End
+
         console.log(email, password);
     };
 

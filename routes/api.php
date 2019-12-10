@@ -30,3 +30,14 @@ Route::group([
         Route::get('user', 'AuthController@user');
     });
 });
+
+Route::group([
+    'prefix' => 'convert'
+], function () {
+    Route::group([
+        'middleware' => 'auth:api'
+    ], function() {
+        Route::post('index', 'ConvertController@index');
+        Route::get('list', 'ConvertController@list');
+    });
+});

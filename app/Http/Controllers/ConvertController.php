@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use CloudConvert\Api;
 use Illuminate\Support\Facades\Storage;
+use App\Convert;
 
 class ConvertController extends Controller
 {
@@ -28,9 +29,17 @@ class ConvertController extends Controller
         try {
             //Convert
             $this->convert($originalPath, $downloadPath, $inputFormat, $outputFormat);
+            //Save to the database
+            $this->save($id, $file->getClientOriginalName(), "{$name}.{$outputFormat}");
             //Delete the original.
             Storage::delete($path);
-            return response()->json(['success' => true]);
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'user_id'=> $id,
+                    'original_name'=>$file->getClientOriginalName(),
+                    'download_name'=> "{$name}.{$outputFormat}" ]
+                ]);
         } catch (\Exception $e) {
             return response()->json(['success' => false]);
         }
@@ -38,9 +47,11 @@ class ConvertController extends Controller
         //Delete the original
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return response()->json(json_encode(['page' => 'list']));
+        $id= $request->user()->id;
+        $downloads = Convert::where('user_id', '=', $id)->orderBy('id', 'DESC')->get();
+        return response()->json($downloads);
     }
 
     public function download()
@@ -53,7 +64,7 @@ class ConvertController extends Controller
     private function convert($upload, $download, $inputFormat, $outputFormat = 'mp3')
     {
         $api = new Api("6BXPs6Kcn1ACbu80YqB5NuhgaErTj9TIBW72xSmoJJmUSyjRYs5RIWi9IpSUWqOK");
-        $x = $api->convert([
+        $api->convert([
             "inputformat" => $inputFormat,
             "outputformat" => $outputFormat,
             "input" => "upload",
@@ -61,6 +72,14 @@ class ConvertController extends Controller
         ])
             ->wait()
             ->download($download);
-        $x;
+    }
+
+    private function save($user, $original, $download)
+    {
+        Convert::create([
+            'user_id' => $user,
+            'original_name' => $original,
+            'download_name' => $download
+        ]);
     }
 }

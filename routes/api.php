@@ -39,5 +39,6 @@ Route::group([
     ], function() {
         Route::post('index', 'ConvertController@index');
         Route::get('list', 'ConvertController@list');
+        Route::get('download', 'ConvertController@download');
     });
 });

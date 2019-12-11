@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -39,11 +39,66 @@ export default function Convert() {
     const classes = useStyles();
     const [name, setName] = useState();
     const [audio, setAudio] = useState(null);
+    let [rows, setRows] = useState([]);
+
+    function createData(user_id, original_name, download_name) {
+        return { user_id, original_name, download_name };
+    }
+
+
 
     const handleSubmit = e => {
         e.preventDefault();
+        let token = localStorage.getItem("converter_token");
+        if (token !== undefined) {
+            var formData = new FormData();
+            formData.append('name', name);
+            formData.append('audio', audio);
+            axios
+                .post(
+                    "/api/convert/index",
+                    formData,
+                    {
+                        headers: {
+                            "content-type": "application/x-www-form-urlencoded",
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                )
+                .then(function(response) {
+                    setRows([response.data.data, ...rows]);
+                    alert(JSON.stringify(response));
+                })
+                .catch(function(error) {
+                    alert(JSON.stringify(error));
+                });
+        } else {
+        }
         console.log(audio);
     };
+
+    useEffect(() => {
+        //Get user information
+        let token = localStorage.getItem("converter_token");
+        if (token !== undefined) {
+            axios
+                .get("/api/convert/list", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .then(function(response) {
+                    setRows(response.data)
+                })
+                .catch(function(error) {
+                    console.log(error)
+                });
+        } else {
+        }
+    },[]);
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -97,7 +152,7 @@ export default function Convert() {
                     <Grid container></Grid>
                 </form>
             </div>
-            <Download />
+            <Download rows={rows} />
             <Box mt={8}>
                 <Copyright />
             </Box>

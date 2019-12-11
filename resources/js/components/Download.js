@@ -6,19 +6,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
-function createData(id, original, converted) {
-    return { id, original, converted };
-}
-
-const rows = [
-    createData(0, "Frozen yoghurt", 159),
-    createData(1, "Ice cream sandwich", 233),
-    createData(2, "Eclair", 262),
-    createData(3, "Cupcake", 305),
-    createData(4, "Gingerbread", 356)
-];
-
-export default function Download() {
+export default function Download(props) {
+    let rows = props.rows;
     return (
         <Paper>
             <Table aria-label="simple table">
@@ -30,9 +19,9 @@ export default function Download() {
                 </TableHead>
                 <TableBody>
                     {rows.map(row => (
-                        <TableRow key={row.id}>
-                            <TableCell>{row.original}</TableCell>
-                            <TableCell>{row.converted}</TableCell>
+                        <TableRow key={row.user_id}>
+                            <TableCell>{row.original_name}</TableCell>
+                            <TableCell>{row.download_name}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

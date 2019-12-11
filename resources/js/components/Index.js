@@ -93,7 +93,7 @@ export default function Index() {
                 .catch(function(error) {});
         } else {
         }
-    });
+    }, []);
     return (
         <div className={classes.root}>
             <div className="container">

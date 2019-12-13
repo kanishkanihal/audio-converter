@@ -14,8 +14,28 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Copyright from "./lib/Copyright";
 import Download from "./Download";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { orange } from "@material-ui/core/colors";
 
 const useStyles = makeStyles(theme => ({
+    root: {
+        display: "flex",
+        alignItems: "center"
+    },
+
+    wrapper: {
+        margin: theme.spacing(1),
+        position: "relative"
+    },
+
+    buttonProgress: {
+        color: orange[900],
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginTop: -12,
+        marginLeft: -12
+    },
     paper: {
         marginTop: theme.spacing(8),
         display: "flex",
@@ -39,42 +59,36 @@ export default function Convert() {
     const classes = useStyles();
     const [name, setName] = useState();
     const [audio, setAudio] = useState(null);
+    const [loading, setLoading] = React.useState(false);
     let [rows, setRows] = useState([]);
-
-    function createData(user_id, original_name, download_name) {
-        return { user_id, original_name, download_name };
-    }
-
-
 
     const handleSubmit = e => {
         e.preventDefault();
         let token = localStorage.getItem("converter_token");
         if (token !== undefined) {
             var formData = new FormData();
-            formData.append('name', name);
-            formData.append('audio', audio);
+            formData.append("name", name);
+            formData.append("audio", audio);
+            setLoading(true);
             axios
-                .post(
-                    "/api/convert/index",
-                    formData,
-                    {
-                        headers: {
-                            "content-type": "application/x-www-form-urlencoded",
-                            "Authorization": `Bearer ${token}`
-                        }
+                .post("/api/convert/index", formData, {
+                    headers: {
+                        "content-type": "application/x-www-form-urlencoded",
+                        Authorization: `Bearer ${token}`
                     }
-                )
+                })
                 .then(function(response) {
                     setRows([response.data.data, ...rows]);
-                    alert(JSON.stringify(response));
                 })
                 .catch(function(error) {
-                    alert(JSON.stringify(error));
+                    alert(JSON.stringify(error.message));
+                    setRows([response.data.data]);
+                })
+                .finally(function() {
+                    setLoading(false);
                 });
         } else {
         }
-        console.log(audio);
     };
 
     useEffect(() => {
@@ -90,14 +104,14 @@ export default function Convert() {
                     }
                 })
                 .then(function(response) {
-                    setRows(response.data)
+                    setRows(response.data);
                 })
                 .catch(function(error) {
-                    console.log(error)
+                    console.log(error);
                 });
         } else {
         }
-    },[]);
+    }, []);
 
     return (
         <Container component="main" maxWidth="xs">
@@ -109,6 +123,7 @@ export default function Convert() {
                 <Typography component="h1" variant="h5">
                     Convert
                 </Typography>
+
                 <form
                     className={classes.form}
                     onSubmit={handleSubmit}
@@ -139,17 +154,24 @@ export default function Convert() {
                             style={{ display: "none" }}
                         />
                     </Button>
-
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Convert
-                    </Button>
-                    <Grid container></Grid>
+                    <div className={classes.wrapper}>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Convert
+                        </Button>
+                        {loading && (
+                            <CircularProgress
+                                size={30}
+                                className={classes.buttonProgress}
+                            />
+                        )}
+                    </div>
+                    <Grid></Grid>
                 </form>
             </div>
             <Download rows={rows} />

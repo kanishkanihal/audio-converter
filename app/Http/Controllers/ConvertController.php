@@ -16,6 +16,7 @@ class ConvertController extends Controller
             'audio' => 'required|file|mimetypes:audio/*',
             'name' => 'required'
         ]);
+        return false;
         $id= $request->user()->id;
         $name = $request->input('name');
         $file = $request->file('audio');
@@ -24,22 +25,20 @@ class ConvertController extends Controller
         //Save the original file.
         $path = $file->store("converter/{$id}");
         $originalPath = storage_path("app/{$path}");
+        //Download folder
+        Storage::makeDirectory("public/converter/{$id}");
         //Upload the file
-        $downloadPath = storage_path("app/converter/{$id}/{$name}.{$outputFormat}");
+        $downloadPath = storage_path("app/public/converter/{$id}/{$name}.{$outputFormat}");
         try {
             //Convert
             $this->convert($originalPath, $downloadPath, $inputFormat, $outputFormat);
             //Save to the database
-            $this->save($id, $file->getClientOriginalName(), "{$name}.{$outputFormat}");
+            $object = $this->save($id, $file->getClientOriginalName(), "{$name}.{$outputFormat}");
             //Delete the original.
             Storage::delete($path);
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'user_id'=> $id,
-                    'original_name'=>$file->getClientOriginalName(),
-                    'download_name'=> "{$name}.{$outputFormat}" ]
-                ]);
+                'data' => $object]);
         } catch (\Exception $e) {
             return response()->json(['success' => false]);
         }
@@ -76,7 +75,7 @@ class ConvertController extends Controller
 
     private function save($user, $original, $download)
     {
-        Convert::create([
+        return Convert::create([
             'user_id' => $user,
             'original_name' => $original,
             'download_name' => $download

@@ -92,6 +92,8 @@ export default function Index() {
                 })
                 .catch(function(error) {});
         } else {
+            setLogged(false);
+            setPage(2);
         }
     }, []);
     return (

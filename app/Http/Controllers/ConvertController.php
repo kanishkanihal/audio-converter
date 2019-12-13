@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use CloudConvert\Api;
 use Illuminate\Support\Facades\Storage;
 use App\Convert;
+use App\Mail\FileConverted;
 
 class ConvertController extends Controller
 {
@@ -16,8 +18,9 @@ class ConvertController extends Controller
             'audio' => 'required|file|mimetypes:audio/*',
             'name' => 'required'
         ]);
-        return false;
+
         $id= $request->user()->id;
+        $email= $request->user()->email;
         $name = $request->input('name');
         $file = $request->file('audio');
         $inputFormat = $file->getClientOriginalExtension();
@@ -36,6 +39,8 @@ class ConvertController extends Controller
             $object = $this->save($id, $file->getClientOriginalName(), "{$name}.{$outputFormat}");
             //Delete the original.
             Storage::delete($path);
+            // Send the mail
+            $this->mail($email, $file->getClientOriginalName(), "{$name}.{$outputFormat}");
             return response()->json([
                 'success' => true,
                 'data' => $object]);
@@ -80,5 +85,11 @@ class ConvertController extends Controller
             'original_name' => $original,
             'download_name' => $download
         ]);
+    }
+
+    private function mail($email, $upload, $download)
+    {
+        Mail::to($email)
+            ->queue(new FileConverted($upload, $download));
     }
 }

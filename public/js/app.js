@@ -77993,12 +77993,12 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_3__["ma
 function Index() {
   var classes = useStyles();
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(2),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
       _useState2 = _slicedToArray(_useState, 2),
       page = _useState2[0],
       setPage = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
       _useState4 = _slicedToArray(_useState3, 2),
       logged = _useState4[0],
       setLogged = _useState4[1];
@@ -78049,7 +78049,7 @@ function Index() {
     //Get user information
     var token = localStorage.getItem("converter_token");
 
-    if (token !== undefined) {
+    if (token != undefined) {
       axios.get("/api/auth/user", {
         headers: {
           "Content-Type": "application/json",

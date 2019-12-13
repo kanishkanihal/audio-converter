@@ -27,8 +27,8 @@ const useStyles = makeStyles(theme => ({
 export default function Index() {
     const classes = useStyles();
 
-    const [page, setPage] = useState(2);
-    const [logged, setLogged] = useState(false);
+    const [page, setPage] = useState();
+    const [logged, setLogged] = useState();
 
     const HeaderLinks = () => {
         if (logged) {
@@ -76,7 +76,7 @@ export default function Index() {
     useEffect(() => {
         //Get user information
         let token = localStorage.getItem("converter_token");
-        if (token !== undefined) {
+        if (token != undefined) {
             axios
                 .get("/api/auth/user", {
                     headers: {

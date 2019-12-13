@@ -67,7 +67,8 @@ class ConvertController extends Controller
 
     private function convert($upload, $download, $inputFormat, $outputFormat = 'mp3')
     {
-        $api = new Api("6BXPs6Kcn1ACbu80YqB5NuhgaErTj9TIBW72xSmoJJmUSyjRYs5RIWi9IpSUWqOK");
+        $key = env('CLOUD_CONVERTER_API_KEY');
+        $api = new Api($key);
         $api->convert([
             "inputformat" => $inputFormat,
             "outputformat" => $outputFormat,
